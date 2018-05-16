@@ -56,7 +56,8 @@ FileLocation=/GitHubHomeTest/src/main/resources/Data.csv
 Note: .csv is the only valid extension of the file that can be used for this project. 
 ***  
 
-## Future work / ToDo  
+## Future work / ToDo
+- [ ] Project to read more formats of the files and not just .csv files  
 - [ ] Make the Build more flexible to include more parameters
 - [ ] Scale the soultion to include parallel thread processing to parse huge files    
 - [ ] Add more JUnit testing for io and logic packages
