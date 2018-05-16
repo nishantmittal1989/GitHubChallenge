@@ -7,7 +7,18 @@
 	<name>GitHubHomeTest</name>
 	<description>GitHug Home Test project to compute statistics regarding the activities taken on the GitHub repositories</description>
 
+	<properties>
+		<jdk.version>1.8</jdk.version>
+		<junit.version>4.11</junit.version>
+	</properties>
+
 	<dependencies>
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>${junit.version}</version>
+			<scope>test</scope>
+		</dependency>
 		<dependency>
 			<groupId>org.apache.commons</groupId>
 			<artifactId>commons-lang3</artifactId>
@@ -17,19 +28,49 @@
 
 	<build>
 		<plugins>
+
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-eclipse-plugin</artifactId>
+				<version>2.9</version>
+				<configuration>
+					<downloadSources>true</downloadSources>
+					<downloadJavadocs>false</downloadJavadocs>
+				</configuration>
+			</plugin>
+
+			<!-- Set a compiler level -->
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
+				<version>2.3.2</version>
 				<configuration>
-					<source>1.8</source>
-					<target>1.8</target>
+					<source>${jdk.version}</source>
+					<target>${jdk.version}</target>
+				</configuration>
+			</plugin>
+
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-assembly-plugin</artifactId>
+				<version>2.4</version>
+				<configuration>
+
+					<!-- MainClass in mainfest make a executable jar -->
+					<archive>
+						<manifest>
+							<mainClass>com.github.main.EntryPoint</mainClass>
+						</manifest>
+					</archive>
+
+					<!-- get all project dependencies -->
+					<descriptorRefs>
+						<descriptorRef>jar-with-dependencies</descriptorRef>
+					</descriptorRefs>
+
 				</configuration>
 			</plugin>
 		</plugins>
 	</build>
-
-	<properties>
-		<maven.compiler.source>1.8</maven.compiler.source>
-	</properties>
 
 </project>

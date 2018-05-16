@@ -35,8 +35,7 @@ public class CSVParser {
 		List<String[]> records = new ArrayList<String[]>();
 
 		try {
-			ClassLoader classLoader = ClassLoader.getSystemClassLoader();
-			File file = new File(classLoader.getResource(inputCSVPath).getFile());
+			File file = new File(inputCSVPath);
 
 			br = new BufferedReader(new FileReader(file));
 			while ((line = br.readLine()) != null) {
@@ -47,8 +46,10 @@ public class CSVParser {
 			}
 
 		} catch (FileNotFoundException ex) {
+			System.err.println("Incorrect File Location");
 			throw ex;
 		} catch (IOException ex) {
+			System.err.println("Issues in reading the File");
 			throw ex;
 		} finally {
 			if (br != null) {

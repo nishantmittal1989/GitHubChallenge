@@ -1,6 +1,5 @@
 package com.github.main;
 
-import java.io.File;
 import java.util.List;
 import java.util.Map.Entry;
 import java.util.PriorityQueue;
@@ -15,28 +14,36 @@ import com.github.logic.PageViewSearch;
 public class EntryPoint {
 
 	public static void main(String[] args) {
-
-		CSVParser parser = new CSVParser();
-		PageViewSearch pvsObj = new PageViewSearch();
+		
+		CSVParser parser = null;
+		PageViewSearch pvsObj = null;
 
 		try {
+			if(args==null || args.length<1){
+				throw new Exception ("File location argument missing");
+			}
+			
+			parser = new CSVParser();
+			pvsObj = new PageViewSearch();
 			// place the file in the resources folder of the Challenge project
 			// and mention the file name
-			List<String[]> records = parser.readCSV("Data.csv");
+			List<String[]> records = parser.readCSV(args[0]);
 
-			System.out.println("\n<-----------------Result of Top Queries-------------------->\n");
+			System.out.println("\n<-----------------Result of Top 5 Queries-------------------->\n");
 			getTopQueries(records, pvsObj);
 
-			System.out.println("\n<-------------Result of Top Queries Clicked---------------->\n");
+			System.out.println("\n<-------------Result of Top 5 Queries Clicked---------------->\n");
 			getTopQueriesClicked(records, pvsObj);
 
-			System.out.println("\n<-------Result of Average length of Search Session--------->\n");
+			System.out.println("\n<-------Result of Average length of Search Session----------->\n");
 			getAverageSessionTime(records, pvsObj);
 
 		} catch (Exception e) {
-			System.out.println("\n<-----------------------Error------------------------------>\n");
-			System.out.println(e.getMessage());
+			System.err.println("\n<--------------------------Error------------------------------>\n");
+			System.err.println(e.getMessage());
 		}
+		
+		System.out.println("\n<--------------------------Done------------------------------>\n");
 
 	}
 
