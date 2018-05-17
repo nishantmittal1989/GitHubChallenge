@@ -1,0 +1,17 @@
+Answer to Question 4:
+If the dataset is large and is split across many files containing hundreds of billions of rows, there are ways we can handle such scenarios:
+
+Approach 1:
+- Since our data is in ASCII text, like a CSV file, we can speed up data loading and make use of less memory by using other data formats. This will allow us to store data in a more compact form that saves memory.
+
+Approach 2:
+- We can load more data into memory to make computation faster and can re-configure the tools and library to allocate more memory to the JVM. For example, if my application is running on a Tomcat Server, I can configure it to have more memory allocation for my application.
+
+Approach 3:
+- We can compute multiple files in parallel using Streaming API present in JDK 1.8. Streaming stores small volume of entire file in memory for faster computation. It does not unload the complete file into memory therefore avoiding the overhead of making memory management slow. 
+- We can also combine Approach 1 and 2 with Approach 3, which will help us in keeping more volume of data in memory and parallel computation and aggregation will further reduce end to end operational time.
+
+Approach 4:
+- We can restore our files to Big Data Platform by making use of Hadoop Ecosystem. There are multiple advantages of using Big Data platform for large datasets.
+    - The minimum block size on HDFS(Hadoop Distributed File System) in Hadoop 2.0 is 128mb and is fragment-able.  Therefore storing files on HDFS will be very fast. Using tech stack like Map-Reduce can compute files in parallel(one can configure the number of mappers and reducers for a MapReduce application) and retrieve data in a very fast manner. 
+    - We can also use Apache Spark which runs in Hadoop env to provide in memory computation. Spark is very fast as it make use of RDDs(Resilient Distributed Datasets) to load data into memory and works on the concept of DAG (Directed acyclic graphs). A DAG gets executed only when an action is called on RDDs which makes it to persist each stage. If any node crashes in the middle of the operation, DAG helps to recover the lost RDD thus making it fault tolerant.

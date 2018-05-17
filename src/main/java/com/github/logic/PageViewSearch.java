@@ -10,19 +10,18 @@ import java.util.regex.Pattern;
 import com.github.exception.PageViewSearchException;
 
 /*
- * Class containing the functionality to return statistic computation done on page view based on user action like:
- *  - What are the top 5 most frequently issued queries (include query counts)?
- *  - What are the top 5 queries in terms of total number of results clicked (include click counts)?
- *  - What is the average length of a search session? A search session is the amount of time between the initial search and the time they clicked on the last result.
+ * Class containing the functionality to return statistic computation done on page view based on user action
  */
 public class PageViewSearch {
 
 	/*
 	 * This function returns top n queries for searched or clicked results based
 	 * on the column number passed. Time Complexity is O(n), space Complexity is
-	 * O(n)
+	 * O(n). records: DataSet passed to the function, n: number of Top queries
+	 * needed, filterByColumn: the column used to filter and compute top queries
+	 * and top clicked results
 	 */
-	public PriorityQueue<Entry<String, Integer>> getTopKQueries(List<String[]> records, int n, int columnNumber)
+	public PriorityQueue<Entry<String, Integer>> getTopNQueries(List<String[]> records, int n, int filterByColumn)
 			throws PageViewSearchException {
 		if (records == null || records.isEmpty())
 			throw new PageViewSearchException("No Records in the File");
@@ -38,11 +37,11 @@ public class PageViewSearch {
 				// using regex pattern ^\/search\?q=.*$ to filter search queries
 				// from repository clicks
 				String pattern = "^\\/search\\?q=.*$";
-				if (Pattern.matches(pattern, record[columnNumber])) {
-					if (mapOfQueries.containsKey(record[columnNumber]))
-						mapOfQueries.put(record[columnNumber], mapOfQueries.get((record)[columnNumber]) + 1);
+				if (Pattern.matches(pattern, record[filterByColumn])) {
+					if (mapOfQueries.containsKey(record[filterByColumn]))
+						mapOfQueries.put(record[filterByColumn], mapOfQueries.get((record)[filterByColumn]) + 1);
 					else
-						mapOfQueries.put(record[columnNumber], 1);
+						mapOfQueries.put(record[filterByColumn], 1);
 				}
 			} catch (Exception ex) {
 				throw ex;
@@ -71,9 +70,10 @@ public class PageViewSearch {
 
 	/*
 	 * This function calculate the average length of a search session. Time
-	 * Complexity is O(n), space Complexity is O(n)
+	 * Complexity is O(n), space Complexity is O(n), records: DataSet passed to
+	 * the function
 	 */
-	public int getAverageSessionTime(List<String[]> records) throws PageViewSearchException {
+	public Double getAverageSessionTime(List<String[]> records) throws PageViewSearchException {
 		if (records == null || records.isEmpty())
 			throw new PageViewSearchException("No Records in the File");
 
@@ -102,13 +102,16 @@ public class PageViewSearch {
 			}
 		}
 
-		int totalTime = 0, avgTime = 0;
+		int totalTime = 0;
+		double avgTime = 0;
 
-		if (maxTimePerSessionPerUserMap != null && !maxTimePerSessionPerUserMap.isEmpty()) {
+		// computing the average session time
+		if (maxTimePerSessionPerUserMap != null && !maxTimePerSessionPerUserMap.isEmpty()
+				&& minTimePerSessionPerUserMap != null && !minTimePerSessionPerUserMap.isEmpty()) {
 			for (String key : maxTimePerSessionPerUserMap.keySet()) {
 				totalTime += (maxTimePerSessionPerUserMap.get(key) - minTimePerSessionPerUserMap.get(key));
 			}
-			avgTime = totalTime / maxTimePerSessionPerUserMap.size();
+			avgTime = (double)totalTime / maxTimePerSessionPerUserMap.size();
 		}
 
 		return avgTime;
